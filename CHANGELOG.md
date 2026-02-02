@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.16] - 2026-02-02
+
+### Changed
+- Release 1.2.16
+
+---
+
 All notable changes to XUIONE WebPlayer will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
