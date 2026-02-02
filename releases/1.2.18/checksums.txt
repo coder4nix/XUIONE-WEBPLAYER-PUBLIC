@@ -1,3 +1,3 @@
-c8a40724f233ac8dcaa987fd42c38b46552495a66b2d643808b6ea4e90433ec6  xuione-webplayer-pro-v1.2.18-689e770e.tar.gz
-290cd42b832c8df54be62c5b916268224fc9a65b928bf372dca6c34d0980ed7e  install-linux-amd64
-f0e65e0fdb76e419589ae08f5e2bc9688123c0a371688a5c31d3d34c621c7c0b  install-linux-arm64
+685e757dcd59a64b28163b46e37d0dfcb6e16a83d98a397cf43a5ccf8715633b  xuione-webplayer-pro-v1.2.18-8e1b5e6d.tar.gz
+77e30a345c824fc9d1fd711cd16f134e4c0ef5cdc17160a4fe4e451216f48c99  install-linux-amd64
+eb78823a9bbb3c8bc0da75d284b862b2fb0d58fac5e9bcdc0faad630a3186aec  install-linux-arm64
