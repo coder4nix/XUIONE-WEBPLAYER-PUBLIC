@@ -6,7 +6,6 @@
 
 <p align="center">
   <a href="#features">Features</a> •
-  <a href="#screenshots">Screenshots</a> •
   <a href="#installation">Installation</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#support">Support</a>
@@ -15,7 +14,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.2.16-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-Commercial-orange.svg" alt="License">
-  <img src="https://img.shields.io/badge/platform-Web-green.svg" alt="Platform">
+  <img src="https://img.shields.io/badge/platform-Linux-green.svg" alt="Platform">
 </p>
 
 ---
@@ -50,96 +49,38 @@
 
 ---
 
-## Screenshots
-
-<p align="center">
-  <em>Screenshots coming soon</em>
-</p>
-
----
-
 ## Installation
 
 ### Quick Install (Recommended)
 
-Run this single command on your Linux server:
+Download and run the installer binary:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh | sudo bash
+# AMD64 (most servers)
+curl -fsSL https://github.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/latest/download/install-linux-amd64 -o install
+chmod +x install
+sudo ./install
+
+# ARM64 (Raspberry Pi, ARM servers)
+curl -fsSL https://github.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/latest/download/install-linux-arm64 -o install
+chmod +x install
+sudo ./install
 ```
 
 The installer will:
 - Detect your Linux distribution
 - Install all required dependencies (Node.js 20, Nginx, ffmpeg)
 - Download and extract the latest release
-- Validate your license key
-- Configure Nginx with image caching
+- Configure Nginx with optimized caching
 - Create a systemd service for auto-start
-- Start the WebPlayer
 
 ### Requirements
 
-- Linux (Ubuntu 22.04+, Debian 11+, CentOS/RHEL 8+, Fedora 36+, Arch, Alpine 3.15+)
-- Root/sudo access
-- Valid XUIONE WebPlayer PRO license key
+- **Linux**: Ubuntu 22.04+, Debian 11+, CentOS/RHEL 8+, Fedora 36+, Arch, Alpine 3.15+
+- **Hardware**: 1GB RAM, 1 CPU core minimum
+- **License**: Valid XUIONE WebPlayer PRO license key
 
-**Get your license at [xuiwebplayer.com](https://xuiwebplayer.com)**
-
-### Manual Installation
-
-<details>
-<summary>Click to expand manual installation steps</summary>
-
-1. **Download the latest release**
-
-```bash
-# Get latest version
-VERSION=$(curl -s https://api.github.com/repos/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/latest | grep tag_name | cut -d'"' -f4)
-
-# Download
-wget "https://github.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/download/${VERSION}/xuione-webplayer-pro-${VERSION}.tar.gz"
-```
-
-2. **Extract to /opt**
-
-```bash
-sudo mkdir -p /opt/xuione-webplayer
-sudo tar -xzf xuione-webplayer-pro-*.tar.gz -C /opt/xuione-webplayer --strip-components=1
-cd /opt/xuione-webplayer
-```
-
-3. **Configure license**
-
-```bash
-echo "LICENSE_KEY=XXXX-XXXX-XXXX-XXXX" | sudo tee .env
-sudo chmod 600 .env
-```
-
-4. **Install dependencies**
-
-```bash
-sudo npm install --production
-```
-
-5. **Start the server**
-
-```bash
-sudo npm start
-```
-
-</details>
-
-### Docker Installation
-
-```bash
-docker run -d \
-  --name xuione-webplayer \
-  -p 80:3000 \
-  -e LICENSE_KEY=XXXX-XXXX-XXXX-XXXX \
-  -v xuione-data:/app/data \
-  --restart unless-stopped \
-  ghcr.io/coder4nix/xuione-webplayer:latest
-```
+**[Get your license at xuiwebplayer.com](https://xuiwebplayer.com)**
 
 ### After Installation
 
@@ -162,7 +103,52 @@ sudo systemctl status xuione-webplayer
 sudo journalctl -u xuione-webplayer -f
 
 # Uninstall
-curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh | sudo bash -s -- -u
+sudo /opt/xuione-webplayer/install -u
+```
+
+### Manual Installation
+
+<details>
+<summary>Click to expand manual installation steps</summary>
+
+1. **Download the latest release**
+
+```bash
+VERSION=$(curl -s https://api.github.com/repos/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/latest | grep tag_name | cut -d'"' -f4)
+wget "https://github.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/releases/download/${VERSION}/xuione-webplayer-pro-${VERSION}.tar.gz"
+```
+
+2. **Extract to /opt**
+
+```bash
+sudo mkdir -p /opt/xuione-webplayer
+sudo tar -xzf xuione-webplayer-pro-*.tar.gz -C /opt/xuione-webplayer --strip-components=1
+cd /opt/xuione-webplayer
+```
+
+3. **Install dependencies**
+
+```bash
+sudo npm install --production
+```
+
+4. **Start the server**
+
+```bash
+sudo npm start
+```
+
+</details>
+
+### Docker Installation
+
+```bash
+docker run -d \
+  --name xuione-webplayer \
+  -p 80:3000 \
+  -v xuione-data:/app/data \
+  --restart unless-stopped \
+  ghcr.io/coder4nix/xuione-webplayer:latest
 ```
 
 ---
