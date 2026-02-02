@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.16-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.2.18-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-Commercial-orange.svg" alt="License">
   <img src="https://img.shields.io/badge/platform-Linux-green.svg" alt="Platform">
 </p>
@@ -93,14 +93,17 @@ The installer will:
 ### Useful Commands
 
 ```bash
-# Service management
+# Service management (with colored output)
+sudo xuione start      # Start the service
+sudo xuione stop       # Stop the service
+sudo xuione restart    # Restart the service
+sudo xuione status     # Show service status
+sudo xuione logs       # Follow service logs
+
+# Alternative systemctl commands
 sudo systemctl start xuione-webplayer
 sudo systemctl stop xuione-webplayer
-sudo systemctl restart xuione-webplayer
 sudo systemctl status xuione-webplayer
-
-# View logs
-sudo journalctl -u xuione-webplayer -f
 
 # Uninstall
 sudo /opt/xuione-webplayer/install -u
