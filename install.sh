@@ -1,36 +1,17 @@
 #!/bin/bash
 # =============================================================================
-# XUIONE WebPlayer PRO - Automated Installation Script
+# XUIONE WebPlayer - Automated Installation Script
 # =============================================================================
 #
-# This script can be run in two modes:
-#
-# 1. STANDALONE (Bootstrap) Mode:
-#    When downloaded and run directly, it will:
-#    - Download the latest release from GitHub
-#    - Extract to /opt/xuione-webplayer
-#    - Install dependencies and configure services
-#
-# 2. IN-PLACE Mode:
-#    When run from within /opt/xuione-webplayer (after manual extraction),
-#    it will only configure dependencies and services.
-#
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh | sudo bash
 #   sudo bash install.sh              Install (interactive port selection)
 #   sudo bash install.sh -u           Uninstall completely
+#   sudo bash install.sh -uninstall   Uninstall completely
 #   sudo bash install.sh -h           Show help
 #
 # =============================================================================
 
 set -e
-
-# =============================================================================
-# Configuration
-# =============================================================================
-INSTALL_DIR="/opt/xuione-webplayer"
-VERSION_JSON_URL="https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/version.json"
-GITHUB_REPO="coder4nix/XUIONE-WEBPLAYER-PUBLIC"
 
 # =============================================================================
 # Colors and Formatting
@@ -61,9 +42,6 @@ BULLET="•"
 
 # Default port
 WEBUI_PORT=80
-
-# Mode flags
-BOOTSTRAP_MODE=false
 
 # =============================================================================
 # Helper Functions
@@ -177,7 +155,7 @@ get_network_ip() {
 }
 
 show_help() {
-    echo -e "${WHITE}${BOLD}XUIONE WebPlayer PRO Installer${NC}"
+    echo -e "${WHITE}${BOLD}XUIONE WebPlayer Installer${NC}"
     echo ""
     echo -e "${WHITE}Usage:${NC}"
     echo "  sudo bash install.sh [OPTIONS]"
@@ -186,14 +164,9 @@ show_help() {
     echo "  -u, -uninstall    Uninstall XUIONE WebPlayer completely"
     echo "  -h, -help         Show this help message"
     echo ""
-    echo -e "${WHITE}Quick Install (recommended):${NC}"
-    echo '  curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh -o install.sh && sudo bash install.sh'
-    echo ""
     echo -e "${WHITE}Examples:${NC}"
-    echo "  sudo bash install.sh     # Install (downloads latest release)"
+    echo "  sudo bash install.sh     # Install (interactive port selection)"
     echo "  sudo bash install.sh -u  # Uninstall completely"
-    echo ""
-    echo -e "${WHITE}Install Directory:${NC} $INSTALL_DIR"
     echo ""
 }
 
@@ -869,128 +842,12 @@ uninstall() {
 }
 
 # =============================================================================
-# Bootstrap Functions (for standalone download mode)
-# =============================================================================
-
-check_bootstrap_needed() {
-    # Get the directory where this script is located
-    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-    # Check if we're running from the install directory
-    if [ "$script_dir" = "$INSTALL_DIR" ]; then
-        # We're in the install directory - check if it has the required files
-        if [ -f "$INSTALL_DIR/server/index.js" ] || [ -f "$INSTALL_DIR/dist/index.html" ]; then
-            return 1  # No bootstrap needed
-        fi
-    fi
-
-    # Check if install directory exists and has content
-    if [ -d "$INSTALL_DIR" ] && [ -f "$INSTALL_DIR/server/index.js" ]; then
-        return 1  # No bootstrap needed
-    fi
-
-    # Bootstrap is needed
-    return 0
-}
-
-download_and_extract_release() {
-    print_section "Downloading XUIONE WebPlayer PRO"
-    echo ""
-
-    # Ensure curl is available
-    if ! command -v curl &> /dev/null; then
-        print_step "Installing curl..."
-        apt-get update > /dev/null 2>&1 && apt-get install -y curl > /dev/null 2>&1 || \
-        yum install -y curl > /dev/null 2>&1 || \
-        dnf install -y curl > /dev/null 2>&1 || \
-        pacman -S --noconfirm curl > /dev/null 2>&1 || \
-        apk add curl > /dev/null 2>&1
-    fi
-
-    # Get version info
-    print_step "Fetching latest version info..."
-    local version_json=$(curl -fsSL "$VERSION_JSON_URL" 2>/dev/null)
-
-    if [ -z "$version_json" ]; then
-        print_error "Failed to fetch version info from GitHub"
-        exit 1
-    fi
-
-    local version=$(echo "$version_json" | grep -o '"version": *"[^"]*"' | cut -d'"' -f4)
-    local build_id=$(echo "$version_json" | grep -o '"build_id": *"[^"]*"' | cut -d'"' -f4)
-    local download_url=$(echo "$version_json" | grep -o '"download_url": *"[^"]*"' | cut -d'"' -f4)
-
-    if [ -z "$download_url" ]; then
-        print_error "Could not parse download URL from version.json"
-        exit 1
-    fi
-
-    print_success "Latest version: $version (build: $build_id)"
-    echo ""
-
-    # Create install directory
-    print_step "Creating install directory: $INSTALL_DIR"
-    mkdir -p "$INSTALL_DIR"
-
-    # Download release
-    print_step "Downloading release..."
-    local tmp_file="/tmp/xuione-webplayer-release.tar.gz"
-
-    if ! curl -fsSL "$download_url" -o "$tmp_file"; then
-        print_error "Failed to download release from: $download_url"
-        exit 1
-    fi
-
-    print_success "Download complete"
-
-    # Extract release
-    print_step "Extracting to $INSTALL_DIR..."
-
-    # Extract and strip the top-level directory if present
-    tar -xzf "$tmp_file" -C "$INSTALL_DIR" --strip-components=1 2>/dev/null || \
-    tar -xzf "$tmp_file" -C "$INSTALL_DIR" 2>/dev/null
-
-    if [ $? -ne 0 ]; then
-        print_error "Failed to extract release"
-        rm -f "$tmp_file"
-        exit 1
-    fi
-
-    rm -f "$tmp_file"
-    print_success "Extraction complete"
-
-    # Verify extraction
-    if [ ! -f "$INSTALL_DIR/server/index.js" ]; then
-        print_error "Extraction verification failed: server/index.js not found"
-        echo ""
-        echo -e "  ${GRAY}Contents of $INSTALL_DIR:${NC}"
-        ls -la "$INSTALL_DIR" 2>/dev/null | head -10
-        exit 1
-    fi
-
-    print_success "Release extracted successfully"
-    echo ""
-}
-
-# =============================================================================
 # Main Installation
 # =============================================================================
 
 main() {
-    # Check if we need to bootstrap (download and extract release)
-    if check_bootstrap_needed; then
-        BOOTSTRAP_MODE=true
-        SCRIPT_DIR="$INSTALL_DIR"
-        download_and_extract_release
-    else
-        # Get script directory (when running from within install dir)
-        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-        # If script is not in INSTALL_DIR, use INSTALL_DIR
-        if [ "$SCRIPT_DIR" != "$INSTALL_DIR" ] && [ -d "$INSTALL_DIR" ]; then
-            SCRIPT_DIR="$INSTALL_DIR"
-        fi
-    fi
+    # Get script directory
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
     print_header
 
@@ -1179,8 +1036,7 @@ main() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -u|-uninstall|--uninstall)
-            # For uninstall, always use INSTALL_DIR
-            SCRIPT_DIR="$INSTALL_DIR"
+            SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
             check_root
             uninstall
             exit 0
