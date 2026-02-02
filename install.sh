@@ -20,7 +20,6 @@ set -e
 # =============================================================================
 GITHUB_REPO="coder4nix/XUIONE-WEBPLAYER-PUBLIC"
 GITHUB_API="https://api.github.com/repos/$GITHUB_REPO/releases/latest"
-LICENSE_API="https://xuione-license-api.iotoolscc.workers.dev"
 INSTALL_DIR="/opt/xuione-webplayer"
 WEBUI_PORT=80
 
@@ -31,7 +30,6 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[1;37m'
 GRAY='\033[0;90m'
@@ -107,10 +105,6 @@ print_warning() {
     echo -e "${YELLOW}!${NC} $1"
 }
 
-print_info() {
-    echo -e "${GRAY}${BULLET}${NC} $1"
-}
-
 print_status() {
     local name="$1"
     local status="$2"
@@ -121,8 +115,6 @@ print_status() {
         echo -e "${GREEN}${CHECK} Installed${NC} ${DIM}($version)${NC}"
     elif [ "$status" = "missing" ]; then
         echo -e "${YELLOW}${CROSS} Missing${NC}"
-    elif [ "$status" = "installing" ]; then
-        echo -e "${CYAN}${ARROW} Installing...${NC}"
     fi
 }
 
@@ -164,13 +156,12 @@ show_help() {
     echo -e "${WHITE}Options:${NC}"
     echo "  -u, --uninstall   Uninstall XUIONE WebPlayer PRO completely"
     echo "  -h, --help        Show this help message"
-    echo "  -l, --license     Specify license key (non-interactive)"
-    echo "  -p, --port        Specify port (default: 80)"
+    echo "  -p, --port PORT   Specify port (default: 80)"
     echo ""
     echo -e "${WHITE}Examples:${NC}"
-    echo "  sudo bash install.sh                    # Interactive install"
-    echo "  sudo bash install.sh -l XXXX-XXXX-XXXX  # With license key"
-    echo "  sudo bash install.sh -u                 # Uninstall"
+    echo "  sudo bash install.sh           # Interactive install"
+    echo "  sudo bash install.sh -p 8080   # Install on port 8080"
+    echo "  sudo bash install.sh -u        # Uninstall"
     echo ""
     echo -e "${WHITE}One-liner:${NC}"
     echo "  curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh | sudo bash"
@@ -240,10 +231,6 @@ detect_os() {
     else
         OS_TYPE="unknown"
     fi
-}
-
-version_gte() {
-    [ "$(printf '%s\n' "$2" "$1" | sort -V | head -n1)" = "$2" ]
 }
 
 # =============================================================================
@@ -369,76 +356,6 @@ install_ffmpeg_suse() { zypper install -y ffmpeg > /dev/null 2>&1; }
 install_package() {
     local package="$1"
     $PKG_INSTALL "$package" > /dev/null 2>&1
-}
-
-# =============================================================================
-# License Validation
-# =============================================================================
-
-validate_license() {
-    local license_key="$1"
-
-    print_step "Validating license key..."
-
-    # Basic format check (XXXX-XXXX-XXXX-XXXX)
-    if ! [[ "$license_key" =~ ^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$ ]]; then
-        print_error "Invalid license key format"
-        echo -e "  ${GRAY}Expected format: XXXX-XXXX-XXXX-XXXX${NC}"
-        return 1
-    fi
-
-    # Validate with API
-    local response
-    response=$(curl -s -w "\n%{http_code}" -X POST "$LICENSE_API/api/license/validate" \
-        -H "Content-Type: application/json" \
-        -d "{\"licenseKey\": \"$license_key\"}" 2>/dev/null)
-
-    local http_code=$(echo "$response" | tail -1)
-    local body=$(echo "$response" | sed '$d')
-
-    if [ "$http_code" = "200" ]; then
-        local valid=$(echo "$body" | grep -o '"valid":\s*true' || true)
-        if [ -n "$valid" ]; then
-            print_success "License key validated"
-            return 0
-        fi
-    fi
-
-    print_error "License validation failed"
-    echo -e "  ${GRAY}Please check your license key or contact support${NC}"
-    return 1
-}
-
-input_license() {
-    echo ""
-    echo -e "${WHITE}${BOLD}License Key${NC}"
-    echo ""
-    echo -e "  ${GRAY}Enter your XUIONE WebPlayer PRO license key.${NC}"
-    echo -e "  ${GRAY}Purchase at: https://xuiwebplayer.com${NC}"
-    echo ""
-
-    while true; do
-        echo -e -n "${YELLOW}?${NC} License Key: "
-        read -r LICENSE_KEY
-
-        if [ -z "$LICENSE_KEY" ]; then
-            print_error "License key is required"
-            continue
-        fi
-
-        # Convert to uppercase
-        LICENSE_KEY=$(echo "$LICENSE_KEY" | tr '[:lower:]' '[:upper:]')
-
-        if validate_license "$LICENSE_KEY"; then
-            break
-        fi
-
-        echo ""
-        if ! confirm "Try again?"; then
-            print_error "Installation cancelled"
-            exit 1
-        fi
-    done
 }
 
 # =============================================================================
@@ -576,7 +493,7 @@ upstream xuione_vite {
 server {
     listen $WEBUI_PORT;
     listen [::]:$WEBUI_PORT;
-    server_name localhost $NETWORK_IP;
+    server_name localhost $NETWORK_IP _;
 
     gzip on;
     gzip_vary on;
@@ -654,20 +571,6 @@ EOF
     systemctl restart nginx > /dev/null 2>&1 || service nginx restart > /dev/null 2>&1 || true
 }
 
-save_license() {
-    print_step "Saving license configuration..."
-
-    # Create .env file with license
-    cat > "$INSTALL_DIR/.env" << EOF
-# XUIONE WebPlayer PRO Configuration
-LICENSE_KEY=$LICENSE_KEY
-NODE_ENV=production
-EOF
-
-    chmod 600 "$INSTALL_DIR/.env"
-    print_success "License saved"
-}
-
 create_systemd_service() {
     if ! command -v systemctl &> /dev/null; then
         print_warning "Systemd not available, skipping service creation"
@@ -696,7 +599,6 @@ KillSignal=SIGTERM
 TimeoutStopSec=30
 Environment=NODE_ENV=production
 Environment=PATH=/usr/local/bin:/usr/bin:/bin
-EnvironmentFile=-$INSTALL_DIR/.env
 
 StandardOutput=journal
 StandardError=journal
@@ -737,7 +639,8 @@ uninstall() {
     echo ""
 
     if ! confirm "Are you sure you want to uninstall?" "n"; then
-        print_info "Uninstall cancelled"
+        echo ""
+        echo -e "${GRAY}Uninstall cancelled${NC}"
         exit 0
     fi
 
@@ -815,6 +718,7 @@ main() {
 
     if [ "$OS_TYPE" = "unknown" ]; then
         print_error "Unsupported operating system"
+        echo -e "  ${GRAY}Supported: Ubuntu, Debian, CentOS, RHEL, Fedora, Arch, Alpine, openSUSE${NC}"
         exit 1
     fi
 
@@ -826,23 +730,9 @@ main() {
 
     check_root
 
-    # License
-    print_section "License Validation"
-    if [ -z "$LICENSE_KEY" ]; then
-        input_license
-    else
-        if ! validate_license "$LICENSE_KEY"; then
-            exit 1
-        fi
-    fi
-
     # Port
     print_section "Port Configuration"
-    if [ "$WEBUI_PORT" = "80" ]; then
-        select_port
-    else
-        print_success "WebUI will be accessible on port $WEBUI_PORT"
-    fi
+    select_port
 
     # Check packages
     print_section "Checking Requirements"
@@ -855,7 +745,7 @@ main() {
     check_ffmpeg
 
     print_status "curl" "$CURL_STATUS" "$CURL_VERSION"
-    print_status "Node.js (≥18)" "$NODE_STATUS" "$NODE_VERSION"
+    print_status "Node.js (>=18)" "$NODE_STATUS" "$NODE_VERSION"
     print_status "npm" "$NPM_STATUS" "$NPM_VERSION"
     print_status "Nginx" "$NGINX_STATUS" "$NGINX_VERSION"
     print_status "ffmpeg" "$FFMPEG_STATUS" "$FFMPEG_VERSION"
@@ -939,7 +829,6 @@ main() {
     # Configure
     print_section "Configuration"
     echo ""
-    save_license
     configure_nginx
     install_npm_dependencies
     create_systemd_service
@@ -962,6 +851,11 @@ main() {
     echo ""
     print_success "XUIONE WebPlayer PRO has been installed successfully!"
     echo ""
+    echo -e "${WHITE}${BOLD}Next Step:${NC}"
+    echo ""
+    echo -e "  ${GRAY}Open the WebUI and enter your license key when prompted.${NC}"
+    echo -e "  ${GRAY}Purchase a license at:${NC} ${CYAN}https://xuiwebplayer.com${NC}"
+    echo ""
     echo -e "${WHITE}${BOLD}Access:${NC}"
     echo ""
     if [ "$WEBUI_PORT" = "80" ]; then
@@ -978,7 +872,7 @@ main() {
     echo -e "  ${GRAY}Stop:${NC}      sudo systemctl stop xuione-webplayer"
     echo -e "  ${GRAY}Status:${NC}    sudo systemctl status xuione-webplayer"
     echo -e "  ${GRAY}Logs:${NC}      sudo journalctl -u xuione-webplayer -f"
-    echo -e "  ${GRAY}Uninstall:${NC} curl -fsSL https://raw.githubusercontent.com/coder4nix/XUIONE-WEBPLAYER-PUBLIC/main/install.sh | sudo bash -s -- -u"
+    echo -e "  ${GRAY}Uninstall:${NC} sudo bash $INSTALL_DIR/install.sh -u"
     echo ""
     echo -e "${BLUE}════════════════════════════════════════════════════════════════${NC}"
     echo ""
@@ -998,10 +892,6 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             show_help
             exit 0
-            ;;
-        -l|--license)
-            LICENSE_KEY="$2"
-            shift 2
             ;;
         -p|--port)
             WEBUI_PORT="$2"
