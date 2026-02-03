@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.2.20",
+    "date": "2026-02-04",
+    "sections": [
+      {
+        "title": "Fixed",
+        "items": [
+          "Integrity check now runs in soft-fail mode to prevent update issues",
+          "License check proceeds regardless of integrity verification result"
+        ]
+      }
+    ]
+  },
+  {
     "version": "1.2.19",
     "date": "2026-02-04",
     "sections": [
