@@ -6,8 +6,9 @@
       {
         "title": "Fixed",
         "items": [
-          "Integrity check now runs in soft-fail mode to prevent update issues",
-          "License check proceeds regardless of integrity verification result"
+          "Update system now clears Service Worker and browser cache before reload",
+          "Integrity verification works correctly after updates",
+          "Hard reload with cache-bust prevents stale file issues"
         ]
       }
     ]
