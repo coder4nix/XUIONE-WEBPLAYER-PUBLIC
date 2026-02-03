@@ -1,5 +1,69 @@
 [
   {
+    "version": "1.2.19",
+    "date": "2026-02-04",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "Integrity Verification - Client-side signature verification before license check",
+          "Lock Screen - Blocks access when integrity check fails with download link",
+          "X-Integrity-Token header in all API requests for enhanced security"
+        ]
+      },
+      {
+        "title": "Improved",
+        "items": [
+          "LicenseGate now shows 'Verifying integrity...' loading state",
+          "Project documentation reorganized into .claude/ directory"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.18",
+    "date": "2026-02-03",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "License API - Trial license support with expiration dates",
+          "Trial badge shows remaining days next to plan type",
+          "Documentation moved to xuiwebplayer.com/docs/"
+        ]
+      },
+      {
+        "title": "Fixed",
+        "items": [
+          "Image proxy now includes license key for authentication",
+          "Stream proxy authentication for licensed features",
+          "License activation now returns expiration date correctly"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.17",
+    "date": "2026-02-02",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "License system integration with Stripe payments",
+          "LicenseGate component blocks access without valid license",
+          "Activation success screen with license details"
+        ]
+      },
+      {
+        "title": "Improved",
+        "items": [
+          "Server Compatibility Check uses proxied requests",
+          "Residential Proxy feature with license validation"
+        ]
+      }
+    ]
+  },
+  {
     "version": "1.2.16",
     "date": "2026-02-01",
     "sections": [
