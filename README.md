@@ -158,11 +158,7 @@ docker run -d \
 
 ## Documentation
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Configuration Options](docs/configuration.md)
-- [Docker Deployment](docs/docker.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [FAQ](docs/faq.md)
+Full documentation is available at: **[xuiwebplayer.com/docs](https://xuiwebplayer.com/docs/)**
 
 ---
 
