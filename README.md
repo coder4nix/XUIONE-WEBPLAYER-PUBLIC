@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.22-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.2.23-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/license-Commercial-orange.svg" alt="License">
   <img src="https://img.shields.io/badge/platform-Linux-green.svg" alt="Platform">
 </p>

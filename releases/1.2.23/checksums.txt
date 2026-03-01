@@ -1,0 +1,3 @@
+740130d0e326dd26e63e851d8bab6e2b154022d3fb37b4d3844f8c04906dcf40  xuione-webplayer-pro-v1.2.23-a1f6136a.tar.gz
+c5fce71ab2230ba1533dec772bc489ba9cee699074e0e7ddf39bd34248a0868c  install-linux-amd64
+ec9196e0b26ecd77009a6e04243678432affbf8e74935aa2ac8ff8ac5accb468  install-linux-arm64
