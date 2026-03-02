@@ -1,5 +1,121 @@
 [
   {
+    "version": "1.2.26",
+    "date": "2026-03-02",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "PWA Cache Cleanup - Uninstall now deploys a cleanup page that auto-clears Service Workers and browser caches",
+          "SW Heartbeat - Automatically deregisters stale Service Workers when server is unreachable",
+          "Nginx no-cache headers for sw.js to prevent stale Service Worker caching"
+        ]
+      },
+      {
+        "title": "Fixed",
+        "items": [
+          "Admin setup detection now correctly propagated through license activation",
+          "WebSocket and uploads proxy added to installer nginx templates (fixes admin stats and branding uploads)"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.25",
+    "date": "2026-02-28",
+    "sections": [
+      {
+        "title": "Changed",
+        "items": [
+          "Install path standardized to /opt/xuione-webplayer-pro",
+          "Cleaned up duplicate configuration files"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.24",
+    "date": "2026-02-27",
+    "sections": [
+      {
+        "title": "Fixed",
+        "items": [
+          "Admin setup flow correctly passes adminNeedsSetup and adminPath through LicenseService"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.23",
+    "date": "2026-02-20",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "Admin Panel - Full dashboard for Pro+ licenses with setup wizard, branding, and system settings",
+          "Custom Branding - Upload logo/favicon, set colors, white-label mode for Enterprise",
+          "Maintenance Mode - Immediate and scheduled maintenance with user-facing banner",
+          "OpenEPG Integration - Catalog browser with 265+ sources across 60+ countries",
+          "Custom EPG Sources - Add your own EPG URLs with catch-up TV support",
+          "Billing Engine - WHMCS-style billing with Stripe Elements checkout",
+          "Customer Portal - Subscription management, PDF invoices, payment history",
+          "PDF Invoice Generation - Professional A4 invoices with credit note support",
+          "Two-Factor Authentication (2FA) for customer portal accounts",
+          "Configurable Email Provider - Choose between Resend API and custom SMTP",
+          "License Status Enforcement - Suspended/revoked/expired states across full stack",
+          "Single-Domain Enforcement - License locked to one domain with reissue option",
+          "Plan Features Editor - Drag-and-drop sortable feature list with icon catalog",
+          "SSO Portal Login - Direct login from admin dashboard to customer portal"
+        ]
+      },
+      {
+        "title": "Fixed",
+        "items": [
+          "Admin setup flow works correctly for all license plans",
+          "Customer password reset with correct salt format",
+          "Domain validation in installer rejects IPs and invalid formats",
+          "PDF invoice layout and email attachment in Cloudflare Workers",
+          "Multiple subscription handling for customers with multiple licenses"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.22",
+    "date": "2026-02-06",
+    "sections": [
+      {
+        "title": "Improved",
+        "items": [
+          "Installer v1.2.1 - SSL certificate check and automatic proxy.js fix",
+          "Separate App and Installer version tracking",
+          "Version display in installer header"
+        ]
+      }
+    ]
+  },
+  {
+    "version": "1.2.21",
+    "date": "2026-02-04",
+    "sections": [
+      {
+        "title": "Added",
+        "items": [
+          "Server-Side License Management - License stored on server with JWT signing, no more localStorage",
+          "Content Limiting Middleware - Server-side enforcement (Basic: 500/1000/500 channels/movies/series)",
+          "License activation and deactivation via server API"
+        ]
+      },
+      {
+        "title": "Fixed",
+        "items": [
+          "Mixed Content errors resolved",
+          "Marketing site 1-Stream API references updated"
+        ]
+      }
+    ]
+  },
+  {
     "version": "1.2.20",
     "date": "2026-02-04",
     "sections": [
