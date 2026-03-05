@@ -1,0 +1,122 @@
+[
+  {
+    "version": "1.0.0",
+    "date": "2026-03-04",
+    "sections": [
+      {
+        "title": "Streaming & Content",
+        "items": [
+          "Live TV with channel categories, favorites, and channel management",
+          "Movies library with detailed info (cast, director, plot, rating, duration)",
+          "Series with seasons, episodes, and auto-next episode with countdown timer",
+          "Xtream Codes/XUI.ONE API and 1-Stream API support",
+          "TV Archive / Catch-up TV for past programs (Pro+)",
+          "Continue Watching with resume from last position",
+          "Watch History tracking across all content types",
+          "Favorites management for channels, movies, and series",
+          "Adult content filtering with PIN protection"
+        ]
+      },
+      {
+        "title": "EPG (Electronic Program Guide)",
+        "items": [
+          "Provider EPG from Xtream Codes / 1-Stream server",
+          "Custom EPG sources via XMLTV URLs",
+          "OpenEPG integration with 265+ free sources from 60+ countries",
+          "EPG Channel Matching UI for manual corrections",
+          "7-day EPG grid and list view with current program highlighting",
+          "Auto-refresh with configurable intervals (30min to 24hr)",
+          "EPG quality analysis and cache statistics"
+        ]
+      },
+      {
+        "title": "Players & Playback",
+        "items": [
+          "4 player engines: Shaka Player, Video.js, JWPlayer, Bitmovin",
+          "Quality selection (Auto, 480p, 720p, 1080p, 4K)",
+          "Picture-in-Picture with preservation on channel switch (Pro+)",
+          "Playback speed control (0.5x to 2x)",
+          "Subtitle and audio track selection",
+          "Fullscreen and Theatre mode",
+          "Hardware acceleration toggle",
+          "Buffer size tuning (Low/Medium/High)",
+          "Auto-play with configurable countdown (5-120s)",
+          "Stream auto-diagnosis on playback failures"
+        ]
+      },
+      {
+        "title": "User Interface",
+        "items": [
+          "Grid and List view with inline player for live channels",
+          "Dark, Light, and System theme with customizable colors",
+          "Global search across all content (Ctrl+K)",
+          "Keyboard and remote control navigation",
+          "Responsive design for mobile, tablet, and desktop",
+          "Virtual scrolling for large channel lists",
+          "Collapsible sidebar with mobile navigation bar",
+          "Toast notifications and notification center"
+        ]
+      },
+      {
+        "title": "Network & Proxy",
+        "items": [
+          "Built-in CORS proxy for seamless streaming",
+          "HTTP/HTTPS and SOCKS4/SOCKS5 proxy support with authentication",
+          "User Agent selection (VLC, Samsung TV, LG TV, Android, Kodi, Fire TV, TiviMate, and more)",
+          "Connection pooling and proxy connection testing",
+          "Image proxy with Nginx caching (10GB, 30-day TTL)"
+        ]
+      },
+      {
+        "title": "TMDB & Metadata",
+        "items": [
+          "TMDB integration for movie and series metadata (Pro+)",
+          "Automatic poster, backdrop, cast, and trailer fetching",
+          "Image cache with configurable max age and size",
+          "Configurable TMDB API key with validation"
+        ]
+      },
+      {
+        "title": "Profiles & Modes",
+        "items": [
+          "Multi-profile support with per-profile settings and databases",
+          "Self-Service Mode: users manage own server profiles",
+          "Managed Mode: admin configures servers, users login with credentials only",
+          "Profile status checking (online/offline)",
+          "Fingerprint-based profile registry (no credentials stored server-side)"
+        ]
+      },
+      {
+        "title": "Admin Panel (Pro+)",
+        "items": [
+          "Admin dashboard with license overview and system statistics",
+          "Real-time system stats via WebSocket (CPU, RAM, Disk, Network)",
+          "Custom branding: logo, favicon, app name, colors, footer text",
+          "White-label mode for complete rebranding (Enterprise)",
+          "Maintenance mode (immediate and scheduled) with custom messages",
+          "Managed server management (add/edit/delete/test)",
+          "Profile registry overview",
+          "System changelog viewer"
+        ]
+      },
+      {
+        "title": "Settings",
+        "items": [
+          "9 settings sections: Appearance, EPG, Player, Content, Network, Data & Cache, TMDB, Image Cache, About",
+          "Per-table cache TTL configuration (channels, VOD, series, EPG, categories)",
+          "Database statistics and manual cache clearing",
+          "System logs with category filtering, search, and date range"
+        ]
+      },
+      {
+        "title": "Infrastructure",
+        "items": [
+          "Automated installer for Ubuntu, Debian, CentOS, Fedora, Arch, and Alpine",
+          "Customer portal for subscription and billing management",
+          "PWA with Service Worker and offline-first caching",
+          "Integrity system with RSA-signed manifests"
+        ]
+      }
+    ]
+  }
+]
